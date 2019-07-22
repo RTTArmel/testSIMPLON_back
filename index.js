@@ -34,7 +34,7 @@ mongoose.connect(dbConfig.url, {
 });
 
 r(app)
-app.listen(8080); //process.env.PORT || 
+app.listen(process.env.PORT || 8080);  
 /* http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('Hello World\n');
