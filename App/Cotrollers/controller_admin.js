@@ -4,7 +4,9 @@ const fs = require('fs')
 //AJOUT DE NOUVEAU CLIENT
 module.exports.postAdmin = function (req, res) {
     var nom = req.body.nom
+    var prenom = req.body.prenom
     var email = req.body.email
+    var specialite = req.body.specialite
     var password = req.body.password
     var pwd = req.body.pwd
 
@@ -15,9 +17,9 @@ module.exports.postAdmin = function (req, res) {
             } else {
                 id = parseInt(note[note.length - 1].id) + 1;
             }
-            const profil = new Profile({ _id: id, nom: nom, email: email, password: password });
+            const profil = new Profile({ _id: id, nom: nom, prenom: prenom, specialite: specialite, email: email, password: password });
 
-            if (nom || email || password || pwd) {
+            if (nom && prenom && specialite && email && password && pwd) {
                 (password !== pwd) ? console.log("Erreur passwords") :
 
                     profil.save()
@@ -27,7 +29,7 @@ module.exports.postAdmin = function (req, res) {
                         .catch(e => {
                             res.status(500).send({ mes: e.mes || "erreur" })
                         })
-            }
+            } else { console.log('information insuffisantes');}
         })
 }
 
@@ -46,6 +48,8 @@ module.exports.getAdmin = (req, res) => {
 //MODIFICATION INFO CLIENT
 module.exports.updateAdmin = (req, res) => {
     var nom = req.body.nom
+    var prenom = req.body.prenom
+    var specialite = req.body.specialite
     var email = req.body.email
     var password = req.body.password
     var pwd = req.body.pwd
@@ -53,7 +57,7 @@ module.exports.updateAdmin = (req, res) => {
         console.log("informations manquantes");
     } else {
         (password !== pwd) ? console.log("Erreur passwords") :
-            Profile.findByIdAndUpdate(req.params.id, { nom: nom, email: email, password: password }, (err, product) => {
+            Profile.findByIdAndUpdate(req.params.id, { nom: nom, prenom: prenom, specialite: specialite, email: email, password: password }, (err, product) => {
                 Profile.find()
                     .then(note => { res.send(note) })
             })
