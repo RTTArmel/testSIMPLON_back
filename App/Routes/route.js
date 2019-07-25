@@ -1,5 +1,6 @@
 var controllerAdmin = require('../Cotrollers/controller_admin');
 var controllerArticle = require('../Cotrollers/controller_article');
+var controllerParticulier = require('../Cotrollers/controller_particulier');
 
 module.exports.route = function (app) {
 
@@ -10,8 +11,12 @@ module.exports.route = function (app) {
     app.route('/login').post(controllerAdmin.postLogin)
 
     app.route('/profil').post(controllerArticle.create);
+    app.route('/profil/:id').put(controllerArticle.updateArticle);
     app.route('/profil').get(controllerArticle.findAllArticle);
     app.route('/profil/:image').get(controllerArticle.findOneArticle);
+    app.route('/profil/:id').delete(controllerArticle.deleteArticle);
+
+    app.route('/particulier/:id').post(controllerParticulier.createPart)
     // app.get('/profil/:profilId', pers.findOne);
     // app.get('/user/:photo_profil', pers.lireImage);
 }

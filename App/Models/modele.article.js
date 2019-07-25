@@ -6,15 +6,19 @@ const ArticleSchema = mongoose.Schema({
     titre: { type: String, required: true },
     utilisateur: Number,
     image: { type: String, required: true },
-    image1: { type: String, required: true },
-    image2: { type: String, required: true },
-    description: String,
-    prix: Number
+    description: { type: String, required: true },
+    prix: { type: Number, required: true },
+    date: {type: String, required: true},
+    debut: { type: String, required: true },
+    duree: { type: Number, required: true },
+    disponible: { type: Number, required: true },
+    reserve: { type: Number, required: true },
+    active: Boolean,
 }, {
         timestamps: true
     });
 
-module.exports = mongoose.model('article', ArticleSchema);
+module.exports = mongoose.model('atelier', ArticleSchema);
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);

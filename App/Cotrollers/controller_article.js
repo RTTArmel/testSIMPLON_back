@@ -11,28 +11,17 @@ exports.create = (req, res) => {
             } else {
                 id = parseInt(user[user.length - 1]._id) + 1
             }
+
             let imageFile = req.files.image;
-            let imageFile1 = req.files.image1;
-            let imageFile2 = req.files.image2;
-            let nomImage = id 
-            let nomImage1 = id + '1'
-            let nomImage2 = id + '2'
+            let nomImage = id
             res.setHeader('Content-Type', 'text/plain');
-        
+
             imageFile.mv(`${__dirname}/public/${req.body.titre}${nomImage}.jpg`, function (err) {
                 if (err) {
                     return res.status(500).send(err);
                 }
             });
-            imageFile1.mv(`${__dirname}/public/${req.body.titre}${nomImage1}.jpg`, function (err) {
-                if (err) {
-                    return res.status(500).send(err);
-                }
-            });imageFile2.mv(`${__dirname}/public/${req.body.titre}${nomImage2}.jpg`, function (err) {
-                if (err) {
-                    return res.status(500).send(err);
-                }
-            });
+
             const profil = new Profile({
                 _id: id,
                 titre: req.body.titre,
@@ -40,13 +29,19 @@ exports.create = (req, res) => {
                 prix: req.body.prix,
                 description: req.body.description,
                 image: req.body.titre + nomImage + '.jpg',
-                image1: req.body.titre + nomImage1  + '.jpg',
-                image2: req.body.titre + nomImage2 + '.jpg'
+                date: req.body.date,
+                debut: req.body.debut,
+                duree: req.body.duree,
+                reserve: req.body.reserve,
+                disponible: req.body.disponible,
+                active: req.body.active
             });
             profil.save()
                 .then(() => {
                     Profile.find()
                         .then(data => {
+                            console.log('post ok: ', data);
+
                             res.send(data);
                         })
                 }).catch(err => {
@@ -55,29 +50,72 @@ exports.create = (req, res) => {
                     });
                 });
         })
+        .catch(erreur => {console.log('erreur', erreur)})
 };
 
 //Get un par un image
-exports.findOneArticle =(req, res) =>{ 
-    try { 
-        let picture = fs.readFileSync('./App/Cotrollers/public/'+req.params.image)
-        console.log('params: ',req.params.image);
-        res.write(picture) 
-        res.end() 
-    } 
-    catch (e) { console.log("envoie erroné: ", e); } }
+exports.findOneArticle = (req, res) => {
+    try {
+        let picture = fs.readFileSync('./App/Cotrollers/public/' + req.params.image)
+        console.log('params: ', req.params.image);
+        res.write(picture)
+        res.end()
+    }
+    catch (e) { console.log("envoie erroné: ", e); }
+}
 
 
-    
+
 exports.findAllArticle = (req, res) => {
     Profile.find()
         .then(article => {
             res.send(article);
         }).catch(err => {
-            res.status(500).send(article => {
-                message: err.message || "Something wrong while retrieving profils."
+            res.send(err)
+        });
+};
+
+
+exports.updateArticle = (req, res) => {
+
+    let imageFile = req.files.image;
+    let nomImage = req.params.id;
+    res.setHeader('Content-Type', 'text/plain');
+
+    imageFile.mv(`${__dirname}/public/${req.body.titre}${nomImage}.jpg`, function (err) {
+        if (err) {
+            return res.status(500).send(err);
+        }
+    });
+
+    Profile.findByIdAndUpdate(req.params.id, {
+        titre: req.body.titre,
+        utilisateur: req.body.utilisateur,
+        prix: req.body.prix,
+        description: req.body.description,
+        image: req.body.titre + nomImage + '.jpg',
+        date: req.body.date,
+        debut: req.body.debut,
+        duree: req.body.duree,
+        reserve: req.body.reserve,
+        disponible: req.body.disponible,
+        active: true
+    })
+        .then((data) => {
+            console.log('put ok: ', data);
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message || "Something wrong while creating the profil."
             });
         });
+};
+
+//SUPPRESSION ARTICLE
+module.exports.deleteArticle = function (req, res) {
+    Profile.findByIdAndRemove(req.params.id, function (err) {
+        Profile.find()
+            .then(note => { res.send(note) })
+    })
 };
 
 // Find a single article with a articleID

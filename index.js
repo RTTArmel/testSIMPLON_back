@@ -33,8 +33,15 @@ mongoose.connect(dbConfig.url, {
     process.exit();
 });
 
+// http.createServer(function (req, res) {
+//     res.writeHead(200, {'Content-Type': 'text/plain'});
+//     res.end('Hello World\n');
+//   }).listen(process.env.PORT);
+  
+//   console.log('Server currently listening...');
 r(app)
-app.listen(process.env.PORT || 8080);  
+app.listen(process.env.PORT || 8080);
+console.log('process port!!!!!!!!:', process.env.PORT)  
 /* http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('Hello World\n');
